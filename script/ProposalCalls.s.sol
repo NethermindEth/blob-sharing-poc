@@ -32,6 +32,6 @@ contract ProposalCalls is Script {
             data: abi.encodeWithSelector(MinimalInbox.proposeBlock.selector, _blobSegmentB)
         });
 
-        console2.logBytes(abi.encode(calls));
+        console2.logBytes(abi.encodeWithSelector(MinimalBatcher.executeBatch.selector, calls));
     }
 }

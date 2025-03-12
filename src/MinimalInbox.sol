@@ -22,7 +22,9 @@ contract MinimalInbox {
         BlobSegment blobSegment;
     }
 
-    event BlockProposed(uint256 indexed id, bytes32 txsHash, bytes32 blobSegmentHash);
+    event BlockProposed(
+        uint256 indexed id, address indexed proposer, bytes32 txsHash, bytes32 blobSegmentHash
+    );
 
     uint256 internal numBlocks;
 
@@ -41,6 +43,6 @@ contract MinimalInbox {
         uint256 _numBlocks = ++numBlocks;
         blocks[numBlocks] = Block({id: _numBlocks, txsHash: _txsHash, blobSegment: _blobSegment});
 
-        emit BlockProposed(_numBlocks, _txsHash, keccak256(abi.encode(_blobSegment)));
+        emit BlockProposed(_numBlocks, msg.sender, _txsHash, keccak256(abi.encode(_blobSegment)));
     }
 }
