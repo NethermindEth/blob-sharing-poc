@@ -10,12 +10,20 @@ contract MinimalBatcher {
         bytes data;
     }
 
+    error INVALID_ETHER_AMOUNT();
+    error NOT_AUTHORIZED();
     error CALL_FAILED(uint256 index);
 
-    function executeBatch(Call[] calldata calls) external {
+    function executeBatch(Call[] calldata calls) external payable {
+        require(msg.sender == address(this), NOT_AUTHORIZED());
+
+        uint256 totalValue;
         for (uint256 i; i < calls.length; ++i) {
+            totalValue += calls[i].value;
             (bool success,) = calls[i].target.call{value: calls[i].value}(calls[i].data);
             require(success, CALL_FAILED(i));
         }
+
+        require(msg.value == totalValue, INVALID_ETHER_AMOUNT());
     }
 }
