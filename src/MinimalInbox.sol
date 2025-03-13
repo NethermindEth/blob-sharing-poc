@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
+/// @title Minimal Inbox
 contract MinimalInbox {
     struct BlobSegment {
         // Index of the first blob
