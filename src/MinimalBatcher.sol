@@ -14,6 +14,8 @@ contract MinimalBatcher {
     error NOT_AUTHORIZED();
     error CALL_FAILED(uint256 index);
 
+    event ExecutedCall(address indexed target, uint256 value, bytes data);
+
     function executeBatch(Call[] calldata calls) external payable {
         require(msg.sender == address(this), NOT_AUTHORIZED());
 
@@ -22,6 +24,8 @@ contract MinimalBatcher {
             totalValue += calls[i].value;
             (bool success,) = calls[i].target.call{value: calls[i].value}(calls[i].data);
             require(success, CALL_FAILED(i));
+
+            emit ExecutedCall(calls[i].target, calls[i].value, calls[i].data);
         }
 
         require(msg.value == totalValue, INVALID_ETHER_AMOUNT());
